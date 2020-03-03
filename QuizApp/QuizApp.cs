@@ -83,7 +83,7 @@ namespace QuizInterface
             //}
             //quizNumContainer.Add(idx);
 
-            // check if last question
+            // check if not last question
            if (idx < quesCollection.Questions.Count)
             {
                 // display question number
@@ -137,9 +137,9 @@ namespace QuizInterface
                 // next question
                 idx += 1;
             }
-           else
+           // if last question
+           else 
             {
-                // if last question
                 afterLastQuestion(totalScore, quesCollection.Questions.Count, e);
             }
         }
