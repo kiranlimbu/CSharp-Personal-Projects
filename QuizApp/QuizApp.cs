@@ -33,7 +33,6 @@ namespace QuizInterface
 
             this.Location = new Point((screen.Width - w) / 2, (screen.Height - h) / 2);
             this.Size = new Size(w, h);
-   
         }
 
         private void Form1_Load_1(object sender, EventArgs e)
@@ -124,7 +123,6 @@ namespace QuizInterface
                     {
                         result = btn.Name;
                     }
-
                 }
 
                 // place label
@@ -144,7 +142,6 @@ namespace QuizInterface
                 // if last question
                 afterLastQuestion(totalScore, quesCollection.Questions.Count, e);
             }
-
         }
 
         // Dynamic button even handler
@@ -180,7 +177,6 @@ namespace QuizInterface
             nextBtn.FlatStyle = FlatStyle.Flat;
             nextBtn.FlatAppearance.BorderSize = 1;
             nextBtn.FlatAppearance.BorderColor = Color.Blue;
-
         }
 
         // score calculator
@@ -233,7 +229,6 @@ namespace QuizInterface
 
             if (total >= 60)
             {
-
                 welcomeNote.Text = "Congratulation! You passed.\r\nYou scored: " + total.ToString() + "%";
             }
             else
