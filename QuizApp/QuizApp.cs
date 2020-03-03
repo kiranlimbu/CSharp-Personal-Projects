@@ -20,8 +20,8 @@ namespace QuizInterface
         int totalScore = 0;
         bool value = false;
  
-        int questionNumber = 1; // used to number each question
-        string result = "ans"; // used to check answer
+        int questionNumber = 1; // initialize question number
+        string result = "ans"; // initialize correct answer name
 
         public Form1()
         {
