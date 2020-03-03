@@ -97,11 +97,11 @@ namespace QuizInterface
                 textQuestion.Location = new Point(30, 10);
                 textQuestion.Padding = new Padding(0, 0, 0, 10);
 
-                // display answer
+                // get Answers
                 var answer = quesCollection.Questions[idx].Answer;
 
-                // Create Dynamic Answers/Button
-                // place dynamic button
+                // Create Dynamic Answer/Button
+                // place dynamic Answer/Button
                 int i = 0;
                 int top = textQuestion.Height + 10;
                 foreach (KeyValuePair<string, bool> item in answer)
