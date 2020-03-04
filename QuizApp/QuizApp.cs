@@ -104,8 +104,6 @@ namespace QuizInterface
                     btn[i].MaximumSize = new Size(600, 400);
                     btn[i].Location = new Point(60, top);
                     btn[i].FlatStyle = FlatStyle.Flat;
-                    //btn[i].FlatAppearance.BorderSize = 1;
-                    //btn[i].FlatAppearance.BorderColor = Color.LightBlue;
                     this.Controls.Add(btn[i]);
                     btn[i].Click += new EventHandler(this.button_click);
                     top += btn[i].Height + 10;
@@ -135,7 +133,6 @@ namespace QuizInterface
                 // if last question
                 afterLastQuestion(totalScore, totalQuestion, e);
             }
-
         }
 
         // Dynamic button even handler
@@ -151,7 +148,6 @@ namespace QuizInterface
                 submitBtn.Visible = true;
                 submitBtn.Location = new Point(nextBtn.Location.X - 100, nextBtn.Location.Y);
             }
-            
         }
 
         private void submitBtn_Click(object sender, EventArgs e)
@@ -173,8 +169,7 @@ namespace QuizInterface
 
         // score calculator
         public int scoreCalc(bool y)
-        {
-            
+        {            
             if (y)
             {
                 score += 1;
