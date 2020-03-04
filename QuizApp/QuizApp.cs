@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -10,29 +10,28 @@ namespace QuizInterface
     public partial class Form1 : Form
     {
         /* Global variables */
-        Button btn;
+        Random rnd = new Random();
+        RadioButton[] btn;
+        string activeBtn;
+
+        // total question
+        int totalQuestion;
 
         //first question
         int idx = 0;
 
-        int score = 0;
-        int scoreChoice = 0;
+        int ansChoice = 0; // you get one chance
+        int score = 0; // initialize score/ globalized to prevent from setting to zero
         int totalScore = 0;
-        bool value = false;
+        bool selectionFeedBackValue = false;
  
         int questionNumber = 1; // initialize question number
-        string result = "ans"; // initialize correct answer name
+        string result = "ans"; // initialize correct answer
 
         public Form1()
         {
             InitializeComponent();
-            // StartPosition was set to FormStartPosition.Manual in the properties window.
-            Rectangle screen = Screen.PrimaryScreen.WorkingArea;
-            int w = Width >= screen.Width ? screen.Width : (screen.Width + Width) / 4;
-            int h = Height >= screen.Height ? screen.Height : (screen.Height + Height) / 4;
-
-            this.Location = new Point((screen.Width - w) / 2, (screen.Height - h) / 2);
-            this.Size = new Size(w, h);
+   
         }
 
         private void Form1_Load_1(object sender, EventArgs e)
@@ -41,17 +40,13 @@ namespace QuizInterface
             textQuestion.Visible = false;
             quizNum.Visible = false;
             scoreLbl.Visible = false;
-            EntryNote();
-            welcomeNote.Visible = false;
-        }
-
-        public void EntryNote()
-        {
-            welcomeNote.Text = "Welcome to Microsoft System and Software Academy compitency test. \r\nThere are 40 questions.\r\nFor each question you will receive 1 points. \r\nYour score will be added and displayed at the end. \r\n\nGood Luck! \r\nHit next to start your test.";
+            submitBtn.Visible = false;
+            // entry Note
+            welcomeNote.Visible = true;
+            welcomeNote.Text = "Welcome to Microsoft System and Software Academy compitency test. \r\nThere are 47 questions.\r\nEach question is worth 1 point. \r\nYour score will be added and displayed at the end. \r\n\nGood Luck! \r\nHit next to start your test.";
             welcomeNote.Location = new Point(120, 100);
             welcomeNote.Size = new Size(300, 40);
         }
-
         
         private void nextBtn_Click(object sender, EventArgs e)
         {
@@ -60,12 +55,10 @@ namespace QuizInterface
             InitializeComponent();
             Form1_Load_1(e, e);
 
-            // Read JSON file
-            string compitencyQuiz = File.ReadAllText(@"Compitency.json");
-            Random rnd = new Random();
-            QuestionCollection quesCollection;
-
+            // hide welcomeNote
             welcomeNote.Visible = false;
+
+            // display Score
             scoreLbl.Visible = true;
             scoreLbl.Text = "Score: " + totalScore.ToString();
             scoreLbl.Location = new Point(600, 10);
@@ -73,117 +66,116 @@ namespace QuizInterface
             textQuestion.Visible = true;
             quizNum.Visible = true;
 
-            quesCollection = JsonConvert.DeserializeObject<QuestionCollection>(compitencyQuiz);
-            // generate random number
-            //List<int> quizNumContainer = new List<int>();
-            //idx = rnd.Next(0, quesCollection.Questions.Count);
-            //while (quizNumContainer.Contains(idx) == true)
-            //{
-            //    idx = rnd.Next(0, quesCollection.Questions.Count);
-            //}
-            //quizNumContainer.Add(idx);
+            // Read JSON file
+            string compitencyQuiz = File.ReadAllText(@"Compitency.json");
+            QuestionCollection quesCollection = JsonConvert.DeserializeObject<QuestionCollection>(compitencyQuiz);
+            totalQuestion = quesCollection.Questions.Count;
 
-            // check if not last question
-           if (idx < quesCollection.Questions.Count)
+            // check if last question
+            if (idx < totalQuestion)
             {
                 // display question number
-                quizNum.Text = questionNumber.ToString() + ")";
-                quizNum.Location = new Point(0, 10);
-                quizNum.Padding = new Padding(5, 0, 5, 0);
+                quizNum.Text = "Question " + questionNumber.ToString();
+                quizNum.Location = new Point(30, 10);
+                quizNum.Padding = new Padding(0, 0, 0, 0);
                 questionNumber++;
 
                 // display question
                 textQuestion.Text = quesCollection.Questions[idx].Quiz.ToString();
-                textQuestion.Location = new Point(30, 10);
+                textQuestion.Location = new Point(30, 45);
+                textQuestion.MaximumSize = new Size(600, 100);
                 textQuestion.Padding = new Padding(0, 0, 0, 10);
 
-                // get Answers
+                // display answer
                 var answer = quesCollection.Questions[idx].Answer;
 
-                // Create Dynamic Answer/Button
-                // place dynamic Answer/Button
-                int i = 0;
-                int top = textQuestion.Height + 10;
+                // Create Dynamic Answers/Button
+                // place dynamic button
+                btn = new RadioButton[answer.Count];
+                int i = 0; // initialize button index
+                int top = textQuestion.Location.Y + textQuestion.Height + 10;
                 foreach (KeyValuePair<string, bool> item in answer)
                 {
-                    btn = new Button();
-                    btn.Name = "ans" + i.ToString();
-                    btn.Text = item.Key;
-                    btn.AutoSize = true;
-                    btn.Location = new Point(60, top);
-                    btn.FlatStyle = FlatStyle.Flat;
-                    btn.FlatAppearance.BorderSize = 1;
-                    btn.FlatAppearance.BorderColor = Color.LightBlue;
-                    this.Controls.Add(btn);
-                    btn.Click += new EventHandler(this.button_click);
-                    top += btn.Height + 10;
-                    i += 1;
-                    // capture correct answer
+                    btn[i] = new RadioButton();
+                    btn[i].Name = "ans" + i.ToString();
+                    btn[i].Font = new Font("ab", 10);
+                    btn[i].Text = item.Key + Environment.NewLine;
+                    btn[i].AutoSize = true;
+                    btn[i].MaximumSize = new Size(600, 400);
+                    btn[i].Location = new Point(60, top);
+                    btn[i].FlatStyle = FlatStyle.Flat;
+                    //btn[i].FlatAppearance.BorderSize = 1;
+                    //btn[i].FlatAppearance.BorderColor = Color.LightBlue;
+                    this.Controls.Add(btn[i]);
+                    btn[i].Click += new EventHandler(this.button_click);
+                    top += btn[i].Height + 10;
+                 
+                    // get correct answer button name
                     if (item.Value)
                     {
-                        result = btn.Name;
+                        result = btn[i].Name;
                     }
+                    // increase button index
+                    i += 1;
                 }
-
                 // place label
                 infoLbl.Location = new Point(60, top + 10);
 
                 // Dynamic placement of Button NEXT
-                nextBtn.Location = new Point(this.Width / 2, top + 30);
+                nextBtn.Location = new Point(this.Width / 2, this.Height - 56);
 
-                // resets choice
-                scoreChoice = 0;
+                // Reset answer Choice
+                ansChoice = 0;
 
                 // next question
                 idx += 1;
             }
-           // if last question
-           else 
+           else
             {
-                afterLastQuestion(totalScore, quesCollection.Questions.Count, e);
+                // if last question
+                afterLastQuestion(totalScore, totalQuestion, e);
             }
+
         }
 
         // Dynamic button even handler
         void button_click(object sender, EventArgs e)
         {
             // get avtive button
-            Button btn = sender as Button;
+            RadioButton btn = sender as RadioButton;
+            activeBtn = btn.Name;
 
-            // check if active button is correct
-            if (btn.Name == result)
+            // make visible only chance not used
+            if (ansChoice < 1)
             {
-                btn.FlatStyle = FlatStyle.Flat;
-                btn.FlatAppearance.BorderSize = 1;
-                btn.FlatAppearance.BorderColor = Color.Green;
+                submitBtn.Visible = true;
+                submitBtn.Location = new Point(nextBtn.Location.X - 100, nextBtn.Location.Y);
             }
-            else if (btn.Name != result)
-            {
-                btn.FlatStyle = FlatStyle.Flat;
-                btn.FlatAppearance.BorderSize = 1;
-                btn.FlatAppearance.BorderColor = Color.Red;
-            }
-            // display info Correct/Wrong
-            value = (btn.Name == result);
-            information(value);
+            
+        }
 
-            // takes only first answer
-            scoreChoice += 1;
+        private void submitBtn_Click(object sender, EventArgs e)
+        {
+            // display feedback Correct/Wrong
+            selectionFeedBackValue = (activeBtn == result);
+            information(selectionFeedBackValue);
 
-            // get score
-            totalScore = scoreCalc(scoreChoice, value);
+            // get/update score
+            totalScore = scoreCalc(selectionFeedBackValue);
+            scoreLbl.Text = "Score: " + totalScore.ToString();
 
-            // highlight next button
-            nextBtn.FlatStyle = FlatStyle.Flat;
-            nextBtn.FlatAppearance.BorderSize = 1;
-            nextBtn.FlatAppearance.BorderColor = Color.Blue;
+            // hide submitBtn
+            submitBtn.Visible = false;
+
+            // Answer Choice has been used
+            ansChoice += 1;
         }
 
         // score calculator
-        public int scoreCalc(int x, bool y)
+        public int scoreCalc(bool y)
         {
             
-            if (x <= 1 && y)
+            if (y)
             {
                 score += 1;
             }
@@ -209,19 +201,23 @@ namespace QuizInterface
 
         public void afterLastQuestion(int x, int count, EventArgs e)
         {
+            // clear everything
             this.Controls.Clear();
             InitializeComponent();
             Form1_Load_1(e, e);
 
+            // turn off everything
             infoLbl.Visible = false;
             textQuestion.Visible = false;
             quizNum.Visible = false;
             scoreLbl.Visible = false;
             nextBtn.Visible = false;
 
+            // Conclustion Note
             welcomeNote.Visible = true;
             welcomeNote.Location = new Point(240, 100);
 
+            // int to float conversion
             float flt1 = x;
             float flt2 = count;
             float calc = (flt1 / flt2) * 100;
@@ -229,11 +225,12 @@ namespace QuizInterface
 
             if (total >= 60)
             {
-                welcomeNote.Text = "Congratulation! You passed.\r\nYou scored: " + total.ToString() + "%";
+
+                welcomeNote.Text = "Congratulation! You passed.\r\nYou scored: " + total.ToString() + "%\r\nYou got " + totalScore + " correct, out of " + totalQuestion + ".";
             }
             else
             {
-                welcomeNote.Text = "Sorry! You did not pass.\r\nYou scored: " + total.ToString() + "%";
+                welcomeNote.Text = "Sorry! You did not pass.\r\nYou scored: " + total.ToString() + "%\r\nYou got " + totalScore + " correct, out of " + totalQuestion + ".";
             }
         }
     }
