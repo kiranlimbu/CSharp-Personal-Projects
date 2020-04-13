@@ -1,4 +1,6 @@
 # CSharp-Personal-Projects
 Personal projects I worked on the side.
-<h1>Visual Algorithm</h1>
-![](Visual Algorithm/visual_Algorithm3.JPG)
+####Visual Algorithm
+![](Visual%20Algorithm/visual_Algorithm.JPG)
+![](Visual%20Algorithm/visual_Algorithm2.JPG)
+![](Visual%20Algorithm/visual_Algorithm3.JPG)
