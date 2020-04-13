@@ -9,4 +9,4 @@ Personal projects I worked on the side.
 <hr>
 <h4>Quiz App</h4>
 <hr>
-<div><img src="QuizApp/QuizApp1.JPG" width="450">	&nbsp;<img src="QuizApp/QuizApp1.JPG" width="450"></div>
+<div><img src="QuizApp/QuizApp1.JPG" width="450">	&nbsp;<img src="QuizApp/QuizApp2.JPG" width="450"></div>
